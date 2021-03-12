@@ -1,0 +1,15 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+  background-color: black;
+  color: aliceblue;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+span {
+  color: tomato;
+}
+.cursor-pointer{
+  cursor: pointer;
+}
