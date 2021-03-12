@@ -7,7 +7,7 @@ if task will done then click On click Card Task will remove on bottom
 ## Installation
 clone repo
 ```
-git clone :
+git clone : https://github.com/Pramod0215/todo.git
 ```
 npm install
 ```
