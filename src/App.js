@@ -3,55 +3,54 @@ import React, { Component } from 'react';
 import { Button, Card, Col, Container, Form, FormGroup, Row } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import ReactHashtag from "react-hashtag";
-
+import {connect} from 'react-redux';
+import * as action from './Store/Actions/Actions';
 
 
 class Todo extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      todoIncomplete: [],
-      todoComplete: [],
+      todoIncomplete:[],
+      todoComplete:[],
       text: '',
-      message: ''
+      message: '',
+      checked:false
     }
   }
   handleSubmit = (e) => {
     e.preventDefault();
+    
     if (this.state.message !== ' ') {
+      this.props.AddNew(this.state.message)
       this.setState({
-        todoIncomplete: [...this.state.todoIncomplete, { message: this.state.message }].reverse(),
         message:' '
       })
     }
   }
   handleRemove = (index) => {
-    const newList = this.state.todoIncomplete.filter((item, i) => i !== index)
-    this.setState({
-      todoIncomplete: newList
-    })
+    this.props.Remove(index)
+    // const newList = this.state.todoIncomplete.filter((item, i) => i !== index)
+    // this.setState({
+    //   todoIncomplete: newList
+    // },()=>{
+      
+    // })
   }
-  handleDone = (index) => {
-    const newList = this.state.todoIncomplete.filter((item, i) => {
-      if (i === index) {
-        return item.message
-      }
-    })
-    const list = this.state.todoIncomplete.filter((item, i) => i !== index)
-    console.log('newlist', newList, index)
-    this.setState({
-      todoComplete: [...this.state.todoComplete, newList],
-      isChecked: true,
-      todoIncomplete: list
-    })
+  handleDone = (e,index) => {
+    
+    if(e.target.checked === true){
+      this.props.Done(index)
+      this.setState({
+        checked:false
+      })
+    }
 
 
   }
   resetAll = () => {
-    this.setState({
-      todoIncomplete: [],
-      todoComplete: []
-    })
+    localStorage.clear();
+    window.location.reload(true)
   }
   render() {
     return (
@@ -73,7 +72,7 @@ class Todo extends Component {
                 <FormGroup>
 
                   <Form.Control name='message'
-                    defaultValue={this.state.message}
+                    value={this.state.message}
                     onChange={(e) => this.setState({ message: e.target.value })}
                     type='text' placeholder='Add New Todo' />
 
@@ -85,13 +84,13 @@ class Todo extends Component {
                 </FormGroup>
               </Form>
               <div>
-                {this.state.todoIncomplete !== null ? this.state.todoIncomplete.filter(item => {
+                {this.props.todoIncomplete !== null || undefined ? this.props.todoIncomplete.filter(item => {
                   return item.message.toLowerCase().includes(this.state.text.toLowerCase())
                 }).map((item, index) =>
                   <Card key={index} style={{ margin: 10 }}>
-                    <Card.Body className='mt-6 cursor-pointer' onClick={() => this.handleDone(index)}>
+                    <Card.Body className='mt-6 cursor-pointer' >
                       <Row>
-                      
+                      <input className='m-2'   onChange={(e)=>this.handleDone(e,index)} checked={this.state.checked} name='message' type="checkbox" placeholder='Add New Todo' />
                         <div className='m-2'>
                           <ReactHashtag>{item.message} </ReactHashtag>
                         </div>
@@ -103,14 +102,13 @@ class Todo extends Component {
               </div>
               
               <div>
-                {this.state.todoComplete !== null ? this.state.todoComplete.filter(item => {
+                {this.props.todoComplete !== null || undefined ? this.props.todoComplete.filter(item => {
                   return item[0].message.toLowerCase().includes(this.state.text.toLowerCase())
                 }).map((item, index) =>
                   <Card key={index} style={{ margin: 10 }}>
                     <Card.Body>
                       <Row>
                         <input className='m-2' checked name='message' type="checkbox" placeholder='Add New Todo' />
-
                         <div className='m-2'>
                           <ReactHashtag>{item[0].message} </ReactHashtag>
                         </div>
@@ -134,5 +132,27 @@ class Todo extends Component {
     )
   }
 }
+
+
+const mapToState = state => {
+  console.log(state)
+  return {
+    todoComplete: state.todoComplete,
+    todoIncomplete: state.todoIncomplete
+
+  }
+}
+
+const mapToDispatch = dispatch => {
+  
+  return {
+    AddNew: (data) => dispatch(action.addNew(data)),
+    Remove:(data)=>dispatch(action.remove(data)),
+    Done:(data)=>dispatch(action.done(data)),
+    
+  }
+}
+
+export default connect(mapToState, mapToDispatch)(Todo);
 // careers@kloudynet.com
-export default Todo;
+// export default Todo;
