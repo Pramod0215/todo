@@ -30,12 +30,7 @@ class Todo extends Component {
   }
   handleRemove = (index) => {
     this.props.Remove(index)
-    // const newList = this.state.todoIncomplete.filter((item, i) => i !== index)
-    // this.setState({
-    //   todoIncomplete: newList
-    // },()=>{
-      
-    // })
+    
   }
   handleDone = (e,index) => {
     
@@ -154,5 +149,4 @@ const mapToDispatch = dispatch => {
 }
 
 export default connect(mapToState, mapToDispatch)(Todo);
-// careers@kloudynet.com
-// export default Todo;
+

@@ -9,8 +9,7 @@ import hardSet from 'redux-persist/lib/stateReconciler/hardSet'
 const persistConfig = {
   key: 'root',
   storage: storage,
-  // whitelist: ['root'], // which reducer want to store
-  // stateReconciler: hardSet,
+  
 };
 const pReducer = persistReducer(persistConfig, rootReducer);
 
